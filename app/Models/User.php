@@ -18,9 +18,15 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'uuid',
+        'fullname',
         'email',
         'password',
+        'birthday',
+        'phone',
+        'address',
+        'gender',
+        'school',
     ];
 
     /**
@@ -30,7 +36,6 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     /**
@@ -41,4 +46,36 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public $timestamps = true;
+
+    public function students()
+    {
+        return $this->hasMany(Assignment::class, 'teacher_id');
+    }
+
+    public function teacher()
+    {
+        return $this->hasOne(Assignment::class, 'student_id');
+    }
+
+    public function examCategories()
+    {
+        return $this->hasMany(ExamCategory::class, 'created_by');
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class, 'created_by');
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(Answer::class, 'created_by');
+    }
+
+    public function histories()
+    {
+        return $this->hasMany(History::class, 'user_id');
+    }
 }
